@@ -13,7 +13,7 @@ namespace ThemarketParser.Models
         public string us { get; set; }
         public int categoryId { get; set; }
         [Required]
-        public virtual ConcreteCategory category { get; set; }
+        public virtual Category category { get; set; }
         public virtual ICollection<Item> items { get; set; }
         public Size() { items = new List<Item>(); }
     }

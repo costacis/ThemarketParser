@@ -12,7 +12,6 @@
             <th>
                 @Html.DisplayNameFor(model => model.trnslation)
             </th>
-            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -26,10 +25,6 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.trnslation)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.id">Edit</a> |
-                <a asp-action="Delete" asp-route-id="@item.id">Delete</a>
             </td>
         </tr>
 }

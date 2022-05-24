@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Linq;
 using ThemarketParser.Data;
@@ -19,8 +20,9 @@ namespace ThemarketParser.Controllers
 
         public async Task<IActionResult> Index(int page = 1)
         {
+            ViewBag.edited = _db.Items.FirstOrDefault(i => i.isModified == true) != null;
             int pageSize = 100;
-            IQueryable<Item> source = _db.Items.Include(x => x.images);
+            IQueryable<Item> source = _db.Items.Include(x => x.images).Include(x => x.size).Include(x => x.condition).OrderByDescending(x => x.addedAt);
             var count = await source.CountAsync();
             var items = await source.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
 
@@ -31,6 +33,57 @@ namespace ThemarketParser.Controllers
                 items = items
             };
             return View(viewModel);
+        }
+
+        public async Task<IActionResult> Detail(string? id)
+        {
+            if (id == null || id == "") return NotFound();
+            var item = await _db.Items
+                .Include(x => x.images)
+                .Include(x => x.brands)
+                .Include(x => x.sexCategory)
+                .Include(x => x.category)
+                .Include(x => x.concreteCategory)
+                .Include(x => x.condition)
+                .Include(x => x.city)
+                .Include(x => x.size)
+                .FirstOrDefaultAsync(x => x.id == id);
+            if (item == null) return NotFound();
+            return View(item);
+        }
+        public async Task<IActionResult> Delete(string? id)
+        {
+            if (id == null || id == "") return NotFound();
+            var item = await _db.Items.FirstOrDefaultAsync(x => x.id == id);
+            if (item == null) return NotFound();
+            _db.Items.Remove(item);
+            await _db.SaveChangesAsync();
+            return RedirectToAction("Index");
+        }
+
+        public async Task<IActionResult> Edit(string? id)
+        {
+            if (id == null || id == "") return NotFound();
+            var item = await _db.Items.FirstOrDefaultAsync(x => x.id == id);
+            if (item == null) return NotFound();
+            ViewBag.sizes = new SelectList(_db.Sizes.Where(c => c.categoryId == item.categoryId).ToList(), "id", "us");
+            ViewBag.conditions = new SelectList(_db.Condition.ToList(), "id", "trnslation");
+            ViewBag.cities = new SelectList(_db.Cities.ToList(), "id", "title");
+            return View(item);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(Item item)
+        {
+            if (!ModelState.IsValid)
+            {
+                item.isModified = true;
+                _db.Items.Update(item);
+                await _db.SaveChangesAsync();
+                return RedirectToAction("Detail", new { id = item.id });
+            }
+            return View(item);
         }
 
         public async Task<IActionResult> GetData()
@@ -99,8 +152,11 @@ namespace ThemarketParser.Controllers
             _db.AddOrUpdateRange(cities);
             _db.AddOrUpdateRange(brands);
             _db.AddOrUpdateRange(items);
+            var oldItems = _db.Items.ToList().Except(items).ToList();
+            oldItems.ForEach(c => c.isModified = false);
+            _db.AddOrUpdateRange(oldItems);
             _db.AddOrUpdateRange(images);
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
             return RedirectToAction("Index");
         }
 

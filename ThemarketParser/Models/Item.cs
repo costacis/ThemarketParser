@@ -47,13 +47,15 @@ namespace ThemarketParser.Models
         [JsonIgnore]
         public virtual City city { get; set; }
 
-        public virtual ICollection<Brand> brands { get; set; }
+        public virtual IList<Brand> brands { get; set; }
         [JsonIgnore]
         public virtual IList<Image> images { get; set; }
+        public bool isModified { get; set; }
 
         public Item() { 
             brands = new List<Brand>(); 
             images = new List<Image>();
+            isModified = false;
         }
 
     }

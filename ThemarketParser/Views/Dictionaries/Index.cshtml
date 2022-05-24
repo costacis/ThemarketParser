@@ -1,11 +1,10 @@
 ﻿@model ThemarketParser.Models.DictionaryViewModel
 @{
-    ViewData["Title"] = "Словари";
+    ViewData["Title"] = "Справочники";
 }
 
-<h1>Словари</h1>
-<a type="button" class="btn btn-outline-warning" asp-controller="Dictionaries" asp-action="GetData">ПЕРЕЗАГРУЗИТЬ ДАННЫЕ</a>
-<p class="text-info">Словари Brand и City обновляются при скачивании информации о товарах</p>
+<h1>Справочники</h1>
+<a type="button" id="btnLoad" class="btn btn-outline-warning mb-2" asp-controller="Dictionaries" asp-action="GetData">ПЕРЕЗАГРУЗИТЬ ДАННЫЕ</a>
 <div class="accordion" id="accordionExample">
   <div class="accordion-item">
     <h2 class="accordion-header" id="headingOne">
@@ -68,4 +67,11 @@
     </div>
   </div>
 </div>
-
+@section Scripts {
+	<script type="text/javascript">
+	var btnLoad = document.getElementById('btnLoad');
+	btnLoad.addEventListener('click', function() {
+		document.getElementById("accordionExample").innerHTML = '<div class="d-flex justify-content-center"><div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div></div>';
+	}, false);
+	</script>
+}

@@ -27,15 +27,17 @@ namespace ThemarketParser.Models
     }
 
     public class SexCategory: CategoryAbstract { }
-    public class Category : CategoryAbstract { }
+    public class Category : CategoryAbstract {
+        public virtual ICollection<Size> size { get; set; }
+        public Category()
+        {
+            size = new List<Size>();
+        }
+    }
     public class ConcreteCategory : CategoryAbstract {
         [Required]
         [JsonProperty("sizes")]
         public string sizesName { get; set; }
-        public virtual ICollection<Size> size { get; set; }
-        public ConcreteCategory()
-        {
-            size = new List<Size>();
-        }
+        
     }
 }

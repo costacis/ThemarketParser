@@ -1,0 +1,83 @@
+﻿@model ThemarketParser.Models.Item
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Item</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit" asp-controller="Items"  asp-antiforgery="true">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="id" />
+            <input type="hidden" asp-for="addedAt" />
+            <input type="hidden" asp-for="sexCategoryId" />
+            <input type="hidden" asp-for="categoryId" />
+            <input type="hidden" asp-for="concreteCategoryId" />
+            <input type="hidden" asp-for="isModified" />
+            <div class="form-group">
+                <label asp-for="userID" class="control-label"></label>
+                <input asp-for="userID" class="form-control" />
+                <span asp-validation-for="userID" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="model" class="control-label"></label>
+                <input asp-for="model" class="form-control" />
+                <span asp-validation-for="model" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="description" class="control-label"></label>
+                <input asp-for="description" class="form-control" />
+                <span asp-validation-for="description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="price" class="control-label"></label>
+                <input asp-for="price" class="form-control" />
+                <span asp-validation-for="price" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="status" class="control-label"></label>
+                <input asp-for="status" class="form-control" />
+                <span asp-validation-for="status" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="prettyPath" class="control-label"></label>
+                <input asp-for="prettyPath" class="form-control" />
+                <span asp-validation-for="prettyPath" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="likesCount" class="control-label"></label>
+                <input asp-for="likesCount" class="form-control" />
+                <span asp-validation-for="likesCount" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="deliveryPrice" class="control-label"></label>
+                <input asp-for="deliveryPrice" class="form-control" />
+                <span asp-validation-for="deliveryPrice" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="size" class="control-label"></label>
+                <select asp-for="sizeId" class="form-control" asp-items="ViewBag.sizes"></select>
+                <span asp-validation-for="sizeId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="condition" class="control-label"></label>
+                <select asp-for="conditionId" class="form-control" asp-items="ViewBag.conditions"></select>
+                <span asp-validation-for="conditionId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="city" class="control-label"></label>
+                <select asp-for="cityId" class="form-control" asp-items="ViewBag.cities"></select>
+                <span asp-validation-for="cityId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <a asp-controller="Items" asp-action="Index" class="btn btn-outline-secondary">Back to List</a>
+                <input type="submit" value="SAVE" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+

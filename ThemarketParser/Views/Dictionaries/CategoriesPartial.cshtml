@@ -11,7 +11,6 @@
                 <th>
                     @Html.DisplayNameFor(modelItem => item.name)
                 </th>
-                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -21,10 +20,6 @@
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.name)
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.id">Edit</a> |
-                    <a asp-action="Delete" asp-route-id="@item.id">Delete</a>
                 </td>
             </tr>
         </tbody>
@@ -49,7 +44,6 @@
                         <th>
                             @Html.DisplayNameFor(modelItem => item2.name)
                         </th>
-                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -59,10 +53,6 @@
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item2.name)
-                        </td>
-                        <td>
-                            <a asp-action="Edit" asp-route-id="@item.id">Edit</a> |
-                            <a asp-action="Delete" asp-route-id="@item.id">Delete</a>
                         </td>
                     </tr>
                 </tbody>
@@ -86,7 +76,6 @@
                                 <th>
                                     Name
                                 </th>
-                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -97,10 +86,6 @@
                                 </td>
                                 <td>
                                     @Html.DisplayFor(modelItem => item3.name)
-                                </td>
-                                <td>
-                                    <a asp-action="Edit" asp-route-id="@item.id">Edit</a> |
-                                    <a asp-action="Delete" asp-route-id="@item.id">Delete</a>
                                 </td>
                             </tr>
                             }

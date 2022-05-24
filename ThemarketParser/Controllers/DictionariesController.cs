@@ -74,7 +74,7 @@ namespace ThemarketParser.Controllers
                     var cat = _db.ConcreteCategories.FirstOrDefault(c => c.sizesName == category["name"].ToString());
                     if (cat != null)
                     {
-                        sizes.ForEach(s => s.categoryId =cat.id);
+						sizes.ForEach(s => s.categoryId = (int)cat.parentCategoryId);
                         _db.Sizes.AddRange(sizes);
                     }
                 }
@@ -95,18 +95,6 @@ namespace ThemarketParser.Controllers
             return View(data);
 
         }
-        /*
-        public IActionResult CategoriesPartial()
-        {
-            IEnumerable<SexCategory> sexCategories = _db.SexCategories.ToList();
-            return PartialView(sexCategories);
-        }
-        public IActionResult SizesPartial()
-        {
-            IEnumerable<Size> sizes = _db.Sizes.ToList();
-            return PartialView(sizes);
-        }*/
-
 
         public async Task<string?> SendRequest(string url)
         {

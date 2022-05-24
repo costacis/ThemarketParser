@@ -2,15 +2,16 @@
 @{
 	ViewData["Title"] = "Товары";
 }
-
+<div id="content">
 <h1>Товары</h1>
-<a type="button" class="btn btn-outline-warning" asp-controller="Items" asp-action="GetData">ПЕРЕЗАГРУЗИТЬ ДАННЫЕ</a>
+@if (ViewBag.edited) { <button type="button" class="btn btn-outline-warning mb-2" data-bs-toggle="modal" data-bs-target="#updateModal">ОБНОВИТЬ ДАННЫЕ</button> }
+else {<a type="button" id="btnLoad" class="btn btn-outline-warning mb-2" asp-controller="Items" asp-action="GetData">ОБНОВИТЬ ДАННЫЕ</a>}
 <div class="row">
 	@foreach (var item in Model.items)
 	{
 		<div class="col-sm-3">
 			<div class="card">
-				<div id="carouselExampleControls" class="carousel slide card-img-top" data-bs-ride="carousel">
+				<div id="carousel_@item.id" class="carousel slide card-img-top" data-bs-ride="carousel">
 					<div class="carousel-inner">
 						@foreach (var image in item.images)
 						{
@@ -19,44 +20,71 @@
 							</div>
 						}
 					</div>
-					<button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+					<button class="carousel-control-prev" type="button" data-bs-target="#carousel_@item.id" data-bs-slide="prev">
 						<span class="carousel-control-prev-icon" aria-hidden="true"></span>
 						<span class="visually-hidden">Previous</span>
 					</button>
-					<button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+					<button class="carousel-control-next" type="button" data-bs-target="#carousel_@item.id" data-bs-slide="next">
 						<span class="carousel-control-next-icon" aria-hidden="true"></span>
 						<span class="visually-hidden">Next</span>
 					</button>
 				</div>
+				<a asp-controller="Items" asp-action="Detail" asp-route-id="@item.id">
 				<div class="card-body">
 					<h5 class="card-title">@item.model</h5>
 					<p class="card-text">@item.price р.</p>
+					<p class="card-text">US @Html.DisplayFor(modelItem => item.size.us)</p>
 					<p class="card-text">@Html.DisplayFor(modelItem => item.condition.trnslation)</p>
 				</div>
+				</a>
 			</div>
-
 		</div>
 	}
 </div>
-<nav>
-	<ul class="pagination justify-content-center">
-
-		<li class="page-item @if (!Model.pageViewModel.HasPreviousPage) {
-		@("disabled")
-;}">
-			<a class="btn btn-outline-primary" asp-action="Index" asp-route-page="@(Model.pageViewModel.PageNumber - 1)">&laquo;</a>
-		</li>
-		@foreach (var pageNum in Model.pageViewModel.Pages)
+<div>
+  <ul class="pagination pagination-lg justify-content-center">
+    <li class="page-item @if (!Model.pageViewModel.HasPreviousPage) {@("disabled");}">
+      <a class="page-link" asp-action="Index" asp-route-page="@(Model.pageViewModel.PageNumber - 1)">&laquo;</a>
+    </li>
+    @foreach (var pageNum in Model.pageViewModel.Pages)
 		{
-			<li class="page-item"><a class="btn btn-outline-primary @if (Model.pageViewModel.PageNumber == pageNum) {
-			@("active")
-;}" asp-action="Index" asp-route-page="@pageNum">@pageNum</a></li>
+			<li class="page-item @if (Model.pageViewModel.PageNumber == pageNum) {@("active");}">
+				<a class="page-link" asp-action="Index" asp-route-page="@pageNum">@pageNum</a>
+			</li>
 		}
+    <li class="page-item @if (!Model.pageViewModel.HasNextPage) {@("disabled");}">
+      <a class="page-link" asp-action="Index" asp-route-page="@(Model.pageViewModel.PageNumber + 1)">&raquo;</a>
+    </li>
+  </ul>
+</div>
 
-		<li class="page-item @if (!Model.pageViewModel.HasNextPage) {
-		@("disabled")
-;}">
-			<a class="btn btn-outline-primary" asp-action="Index" asp-route-page="@(Model.pageViewModel.PageNumber + 1)">&raquo;</a>
-		</li>
-	</ul>
-</nav>
+
+
+<!-- Modal -->
+<div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="updateModalLabel">ОБНОВИТЬ ДАННЫЕ?</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Данные были изменены, при обновлении изменения могут быть перезаписаны.<br>
+		Вы действительно хотите обновить данные?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ОТМЕНА</button>
+        <a type="button" id="btnLoad" class="btn btn-outline-warning" asp-controller="Items" asp-action="GetData">ОБНОВИТЬ</a>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+@section Scripts {
+	<script type="text/javascript">
+	var btnLoad = document.getElementById('btnLoad');
+	btnLoad.addEventListener('click', function() {
+		document.getElementById("content").innerHTML = '<div class="d-flex justify-content-center"><div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div></div>';
+	}, false);
+	</script>
+}

@@ -26,7 +26,7 @@ namespace ThemarketParser.Data
             modelBuilder.Entity<SexCategory>().HasMany(e => e.items).WithOne(e => e.sexCategory).HasForeignKey(e => e.sexCategoryId).OnDelete(DeleteBehavior.NoAction);
             modelBuilder.Entity<Category>().HasMany(e => e.items).WithOne(e => e.category).HasForeignKey(e => e.categoryId).OnDelete(DeleteBehavior.NoAction);
             modelBuilder.Entity<ConcreteCategory>().HasMany(e => e.items).WithOne(e => e.concreteCategory).HasForeignKey(e => e.concreteCategoryId).OnDelete(DeleteBehavior.NoAction);
-            modelBuilder.Entity<ConcreteCategory>().HasMany(e => e.size).WithOne(e => e.category).HasForeignKey(e => e.categoryId);
+            modelBuilder.Entity<Category>().HasMany(e => e.size).WithOne(e => e.category).HasForeignKey(e => e.categoryId);
 
             modelBuilder.Entity<City>().Property(e => e.title).IsUnicode(false);
             modelBuilder.Entity<City>().HasMany(e => e.items).WithOne(e => e.city).HasForeignKey(e => e.cityId);
@@ -35,6 +35,7 @@ namespace ThemarketParser.Data
             modelBuilder.Entity<Size>().HasMany(e => e.items).WithOne(e => e.size).HasForeignKey(e => e.sizeId);
             modelBuilder.Entity<Item>().HasMany(e => e.images).WithOne(e => e.item).HasForeignKey(e => e.itemId);
             modelBuilder.Entity<Item>().Property(e => e.description).IsUnicode(false);
+            modelBuilder.Entity<Item>().Property(e => e.isModified).HasDefaultValue(false);
         }
     }
 }
