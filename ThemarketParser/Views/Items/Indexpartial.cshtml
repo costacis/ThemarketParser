@@ -1,0 +1,113 @@
+﻿@model IEnumerable<ThemarketParser.Models.Item>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.userID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.model)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.status)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.addedAt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.prettyPath)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.likesCount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.deliveryPrice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.sexCategory)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.category)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.concreteCategory)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.size)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.condition)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.city)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.userID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.model)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.price)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.status)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.addedAt)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.prettyPath)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.likesCount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.deliveryPrice)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.sexCategory.name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.category.name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.concreteCategory.name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.size.us)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.condition.name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.city.title)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

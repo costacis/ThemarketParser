@@ -1,0 +1,121 @@
+﻿@model IEnumerable<ThemarketParser.Models.SexCategory>
+
+
+@foreach (var item in Model) {
+     <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(modelItem => item.id)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(modelItem => item.name)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.name)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.id">Edit</a> |
+                    <a asp-action="Delete" asp-route-id="@item.id">Delete</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="accordion" id="accordion_@Html.DisplayFor(modelItem => item.id)">
+      <div class="accordion-item">
+        <h2 class="accordion-header" id="heading_@Html.DisplayFor(modelItem => item.id)">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse_@Html.DisplayFor(modelItem => item.id)" aria-expanded="false" aria-controls="collapse_@Html.DisplayFor(modelItem => item.id)">
+            CATEGORIES (@item.childCategories.Count)
+          </button>
+        </h2>
+        <div id="collapse_@Html.DisplayFor(modelItem => item.id)" class="accordion-collapse collapse" aria-labelledby="heading_@Html.DisplayFor(modelItem => item.id)" data-bs-parent="#accordion_@Html.DisplayFor(modelItem => item.id)">
+          <div class="accordion-body">
+            @foreach (var item2 in item.childCategories) {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(modelItem => item2.id)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(modelItem => item2.name)
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item2.id)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item2.name)
+                        </td>
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@item.id">Edit</a> |
+                            <a asp-action="Delete" asp-route-id="@item.id">Delete</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="accordion" id="accordion_@Html.DisplayFor(modelItem => item2.id)">
+              <div class="accordion-item">
+                <h2 class="accordion-header" id="heading_@Html.DisplayFor(modelItem => item2.id)">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse_@Html.DisplayFor(modelItem => item2.id)" aria-expanded="false" aria-controls="collapse_@Html.DisplayFor(modelItem => item2.id)">
+                    CONCRETE CATEGORIES (@item2.childCategories.Count)
+                  </button>
+                </h2>
+                <div id="collapse_@Html.DisplayFor(modelItem => item2.id)" class="accordion-collapse collapse" aria-labelledby="heading_@Html.DisplayFor(modelItem => item2.id)" data-bs-parent="#accordion_@Html.DisplayFor(modelItem => item2.id)">
+                  <div class="accordion-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>
+                                    ID
+                                </th>
+                                <th>
+                                    Name
+                                </th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item3 in item2.childCategories) {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item3.id)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item3.name)
+                                </td>
+                                <td>
+                                    <a asp-action="Edit" asp-route-id="@item.id">Edit</a> |
+                                    <a asp-action="Delete" asp-route-id="@item.id">Delete</a>
+                                </td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+            }
+          </div>
+        </div>
+      </div>
+      
+    </div>
+    
+}
+    

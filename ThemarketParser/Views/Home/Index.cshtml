@@ -1,0 +1,50 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <div id="chart_div" style="width: 1000px; height: 600px;"></div>
+    <input id="save-png" type="button" class="btn-primary" value="СОХРАНИТЬ PNG" disabled />
+</div>
+
+@section Scripts {
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+    // Load the Visualization API and the piechart package.
+    google.charts.load('current', {'packages':['corechart']});
+      
+    // Set a callback to run when the Google Visualization API is loaded.
+    google.setOnLoadCallback(drawChart);
+
+    function drawChart() {
+        var jsonData = $.ajax({
+            url: "/Home/GetStatisticsForChart",
+            dataType: "json",
+            async: false
+        }).responseText;
+
+        // Create our data table out of JSON data loaded from server.
+        var data = new google.visualization.DataTable(jsonData);
+
+        // Instantiate and draw our chart, passing in some options.
+        var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+
+        var btnSave = document.getElementById('save-png');
+
+          google.visualization.events.addListener(chart, 'ready', function () {
+            btnSave.disabled = false;
+          });
+
+          btnSave.addEventListener('click', function () {
+            var a  = document.createElement('a');
+            a.href = chart.getImageURI();
+            a.download = 'image.png';
+            a.click()
+          }, false);
+
+        chart.draw(data, { width: 1000, height: 600 });
+    }
+</script>
+}

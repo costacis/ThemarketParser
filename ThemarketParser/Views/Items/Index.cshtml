@@ -1,0 +1,62 @@
+﻿@model ThemarketParser.Models.ItemsViewModel
+@{
+	ViewData["Title"] = "Товары";
+}
+
+<h1>Товары</h1>
+<a type="button" class="btn btn-outline-warning" asp-controller="Items" asp-action="GetData">ПЕРЕЗАГРУЗИТЬ ДАННЫЕ</a>
+<div class="row">
+	@foreach (var item in Model.items)
+	{
+		<div class="col-sm-3">
+			<div class="card">
+				<div id="carouselExampleControls" class="carousel slide card-img-top" data-bs-ride="carousel">
+					<div class="carousel-inner">
+						@foreach (var image in item.images)
+						{
+							<div class="carousel-item @if (item.images.IndexOf(image) == 0){@("active")}" style="height: 300px;">
+								<img src="@image.url" class="card-img-top d-block img-fluid">
+							</div>
+						}
+					</div>
+					<button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+						<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+						<span class="visually-hidden">Previous</span>
+					</button>
+					<button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+						<span class="carousel-control-next-icon" aria-hidden="true"></span>
+						<span class="visually-hidden">Next</span>
+					</button>
+				</div>
+				<div class="card-body">
+					<h5 class="card-title">@item.model</h5>
+					<p class="card-text">@item.price р.</p>
+					<p class="card-text">@Html.DisplayFor(modelItem => item.condition.trnslation)</p>
+				</div>
+			</div>
+
+		</div>
+	}
+</div>
+<nav>
+	<ul class="pagination justify-content-center">
+
+		<li class="page-item @if (!Model.pageViewModel.HasPreviousPage) {
+		@("disabled")
+;}">
+			<a class="btn btn-outline-primary" asp-action="Index" asp-route-page="@(Model.pageViewModel.PageNumber - 1)">&laquo;</a>
+		</li>
+		@foreach (var pageNum in Model.pageViewModel.Pages)
+		{
+			<li class="page-item"><a class="btn btn-outline-primary @if (Model.pageViewModel.PageNumber == pageNum) {
+			@("active")
+;}" asp-action="Index" asp-route-page="@pageNum">@pageNum</a></li>
+		}
+
+		<li class="page-item @if (!Model.pageViewModel.HasNextPage) {
+		@("disabled")
+;}">
+			<a class="btn btn-outline-primary" asp-action="Index" asp-route-page="@(Model.pageViewModel.PageNumber + 1)">&raquo;</a>
+		</li>
+	</ul>
+</nav>
