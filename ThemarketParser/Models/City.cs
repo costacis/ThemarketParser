@@ -10,6 +10,7 @@ namespace ThemarketParser.Models
         public int id { get; set; }
         [Required]
         public string title { get; set; }
+        public string? iso { get; set; } = null;
 
         public virtual ICollection<Item> items { get; set; }
         public City() { items = new List<Item>(); }

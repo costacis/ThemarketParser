@@ -79,6 +79,19 @@ namespace ThemarketParser.Controllers
                     }
                 }
             }
+
+            var cities = _db.Cities;
+            foreach (var city in cities)
+			{
+                data = await SendRequest($"http://api.geonames.org/searchJSON?q={city.title}&username=costacis");
+                if (data != null)
+                {
+                    int start = data.IndexOf("ISO3166_2");
+                    city.iso = "RU-"+data.Substring(start+12, 3).Replace("\"","");
+                    
+                }
+            }
+            //_db.Cities.UpdateRange(cities);
             _db.SaveChanges();
             return RedirectToAction("Index");
         }

@@ -1,50 +1,98 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model ThemarketParser.Models.HomeViewModel
+
+@{
+	ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-    <div id="chart_div" style="width: 1000px; height: 600px;"></div>
-    <input id="save-png" type="button" class="btn-primary" value="СОХРАНИТЬ PNG" disabled />
+<div class="">
+	<form action="" id="form" method="post">
+		<fieldset class="form-group">
+			<legend class="mt-4">Состояние</legend>
+			@foreach (Condition item in ViewBag.conditions)
+			{
+				<div class="form-check">
+					<input class="form-check-input" type="checkbox" name="conditionIds" value="@item.id" id="@item.id" checked>
+					<label class="form-check-label" for="@item.id">@item.trnslation</label>
+				</div>
+			}
+		</fieldset>
+		<fieldset class="form-group">
+			<legend class="mt-4">Категории</legend>
+			@foreach (Category item in ViewBag.categories)
+			{
+				<div class="form-check">
+					<input class="form-check-input" type="checkbox" name="categoryNames" value="@item.name" id="@item.name" checked>
+					<label class="form-check-label" for="@item.name">@item.name</label>
+				</div>
+			}
+		</fieldset>
+		<legend class="mt-4">Цена</legend>
+		<label for="amount" class="form-label">Ценовой диапазон: </label>
+		<input type="text" id="amount" readonly style="border:0; font-weight:bold;" value="@ViewBag.min - @ViewBag.max">
+		<input type="text" id="chart1" name="chart1" value="" hidden>
+		<input type="text" id="chart2" name="chart2" value="" hidden>
+		<input type="range" class="form-range" id="priceMin" name="priceA" min="@ViewBag.min" max="@ViewBag.max" step="10" value="@ViewBag.min" oninput="updateTextInput();">
+		<input type="range" class="form-range" id="priceMax" name="priceB" min="@ViewBag.min" max="@ViewBag.max" step="10" value="@ViewBag.max" oninput="updateTextInput();">
+		<div class="">
+			<button id="make-diagram" class="btn btn-primary" type="submit" name="diagram" disabled>Посторить диаграмму</button>
+			<button id="save-report" class="btn btn-primary" type="submit" name="report" formaction="Home/Index" disabled>Сформировать отчет</button>
+		</div>
+		<div id="chart_div" style="width: 100%; height: 500px;"></div>
+		<div id="regions_div" style="width: 100%; height: auto;"></div>
+	</form>
 </div>
 
 @section Scripts {
-    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-    <script type="text/javascript">
-    // Load the Visualization API and the piechart package.
-    google.charts.load('current', {'packages':['corechart']});
-      
-    // Set a callback to run when the Google Visualization API is loaded.
-    google.setOnLoadCallback(drawChart);
+	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+	<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+	<script type="text/javascript">
+		// Load the Visualization API and the piechart package.
+		google.charts.load('current', { 'packages': ['corechart', 'geochart'] });
+		//google.charts.load('current', {'packages':['geochart']});
+		google.charts.setOnLoadCallback(setActive);
 
-    function drawChart() {
-        var jsonData = $.ajax({
-            url: "/Home/GetStatisticsForChart",
-            dataType: "json",
-            async: false
-        }).responseText;
+		function setActive() {
+			var btnMake = document.getElementById('make-diagram');
+			btnMake.disabled = false;
+		}
 
-        // Create our data table out of JSON data loaded from server.
-        var data = new google.visualization.DataTable(jsonData);
+		$('#make-diagram').click(function() {
+			$.post(
+				'/Home/Form', // адрес обработчика
+				$("#form").serialize(), // отправляемые данные
 
-        // Instantiate and draw our chart, passing in some options.
-        var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+				function(msg) { // получен ответ сервера
+					var data1 = new google.visualization.DataTable(msg[0]);
+					var chart1 = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+					google.visualization.events.addListener(chart1, 'ready', function () {
+						$('input#chart1').val(chart1.getImageURI());
+					});
+					chart1.draw(data1, {});
 
-        var btnSave = document.getElementById('save-png');
+					var data2 = new google.visualization.DataTable(msg[1]);
+					var options = {
+						resolution: 'provinces',
+						region: 'RU',
+						colorAxis: { colors: ['green', 'red'] }
+					};
+					var chart2 = new google.visualization.GeoChart(document.getElementById('regions_div'));
+					google.visualization.events.addListener(chart2, 'ready', function () {
+						$('input#chart2').val(chart2.getImageURI());
+					});
+					chart2.draw(data2, options);
 
-          google.visualization.events.addListener(chart, 'ready', function () {
-            btnSave.disabled = false;
-          });
-
-          btnSave.addEventListener('click', function () {
-            var a  = document.createElement('a');
-            a.href = chart.getImageURI();
-            a.download = 'image.png';
-            a.click()
-          }, false);
-
-        chart.draw(data, { width: 1000, height: 600 });
-    }
-</script>
+					var btnRep = document.getElementById('save-report');
+					btnRep.disabled = false;
+				}
+			);
+			return false;
+		});
+	</script>
+	<script type="text/javascript">
+		function updateTextInput() {
+			var a = document.getElementById('priceMin').value;
+			var b = document.getElementById('priceMax').value;
+			document.getElementById('amount').value = Math.min(a, b) + ' - ' + Math.max(a, b);
+		}
+	</script>
 }

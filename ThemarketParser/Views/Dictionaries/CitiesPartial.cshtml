@@ -9,6 +9,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.title)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.iso)
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -19,6 +22,9 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.iso)
             </td>
         </tr>
 }
